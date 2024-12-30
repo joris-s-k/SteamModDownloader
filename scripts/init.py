@@ -68,15 +68,17 @@ def checkConfig():
 
 def downloadMods():
     while True:
-        workshopURL = input("Mod/Collection Workshop URL: ")
+        workshopURL = input("Mod/Collection Workshop URL,startItem: ")
         workshopURLType = steam.checkType(workshopURL)
+        URLandIndex = workshopURL.split(",")
         if workshopURLType == "mod":
             print('(PROCESS) Downloading mod...')
-            steam.downloadMod(workshopURL)
+            steam.downloadMod(URLandIndex[0])
             break
         elif workshopURLType == "collection":
+            if(len(URLandIndex)<2): URLandIndex.append("0")
             print('(PROCESS) Downloading collection...')
-            steam.downloadCollection(workshopURL)
+            steam.downloadCollection2(URLandIndex[0],int(URLandIndex[1]))
             break
         else:
             print('(ERROR) Invalid URL, awaiting new.')
@@ -86,7 +88,7 @@ def listMods():
     print("--------------------------------------------------")
     print("MODS IN '"+conf.fetchConfiguration("downloadDir")+"'...\n")
     for dir in os.listdir(conf.fetchConfiguration('downloadDir')):
-        smbDir=os.path.join(conf.fetchConfiguration('downloadDir'),os.path.join(dir, 'smbinfo.json'))
+        smbDir=os.path.join(conf.fetchConfiguration('downloadDir'),os.path.join(dir, 'failed.json'))
         if os.path.exists(smbDir):
             jsonData=json.load(open(smbDir, 'r'))
             print(jsonData['name'])

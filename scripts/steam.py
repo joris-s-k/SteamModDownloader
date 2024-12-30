@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from scripts.steamcmd import download
+from scripts.steamcmd import download, downloadModList
 from scripts.config import fetchConfiguration
 
 def processURL(url):
@@ -29,10 +29,34 @@ def downloadMod(url):
     id = processURL(url)
     download(id, gameid, title, dwn)
 
-def downloadCollection(url):
+def downloadCollection(url,startIndex):
     res = requests.get(url)
     doc = BeautifulSoup(res.text,"html.parser")
     itemList = doc.find_all(class_="collectionItemDetails")
-    for item in itemList:
-        downloadMod(item.find("a", href=True)['href'])
+    for index, item in enumerate(itemList):
+        if(index >= startIndex):
+            print(" ")
+            print(" ")
+            print("Downloading Item #{}".format(index))
+            downloadMod(item.find("a", href=True)['href'])
+
+def parseMod(url):
+    dwn = fetchConfiguration('downloadDir')
+    gameid = fetchConfiguration('gameID')
+    res = requests.get(url)
+    doc = BeautifulSoup(res.text, "html.parser")
+    title = doc.head.title.text.split("::")[1]
+    id = processURL(url)
+    mod = [id, gameid, title, dwn]
+    return mod
+
+def downloadCollection2(url,startIndex):
+    res = requests.get(url)
+    doc = BeautifulSoup(res.text,"html.parser")
+    itemList = doc.find_all(class_="collectionItemDetails")
+    modList = []
+    for index, item in enumerate(itemList):
+        if(index >= startIndex):
+            modList.append(parseMod(item.find("a", href=True)['href']))
+    downloadModList(modList)
 
