@@ -6,7 +6,7 @@ import subprocess
 import shutil
 import json
 import time
-
+from scripts.colors import Colors
 # Variables
 steamCmdLinuxUrl="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz"
 steamCmdWindowsUrl="https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip"
@@ -38,6 +38,7 @@ def checkAndDownloadSteamCmd():
         os.mkdir('./scripts/steamcmd/workshop')
     else:
         return
+
 def download(id,gameId,name,insDir):
     while(True):
         print('Downloading '+ name+'(MODID: '+id+' GAMEID: '+gameId+')')
@@ -70,11 +71,12 @@ def downloadModList(modList):
     #modList is [[id,gameId,name,insDir],...]
     #hardcoded steamcmd.sh to linx here, have to replace with steamCmdExe
     command = [steamCmdPath+"steamcmd.sh",'+force_install_dir '+workDirectory,f'+login {anonCheck()}']
-    for mod in modList:
+    for index,mod in enumerate(modList):
         id = mod[0]
         gameId = mod[1]
         name = mod[2]
-        print('Downloading '+ name+'(MODID: '+id+' GAMEID: '+gameId+')')
+        #print('Downloading '+ name+'(MODID: '+id+' GAMEID: '+gameId+')')
+        print(f'Downloading #{index}\t(MODID: {Colors.GREEN}{id}{Colors.END} GAMEID: {gameId}) {Colors.GREEN}{name}{Colors.END}')
         command.append(f'+workshop_download_item {gameId} {id}')
     command.append('+exit')
     subprocess.run(command)
@@ -88,7 +90,7 @@ def moveMod(mod):
     insDir = mod[3]
     #print('\n--------------------------------------------------')
     print('--------------------------------------------------')
-    print('Moving and Renaming ' +name+' ('+id+')')
+    print('Moving and Renaming: ('+id+') '+name)
     modFol=conDir+gameId+'/'+id+'/'
     outPathName=insDir+'/'+name
     if os.path.exists(outPathName): print('Updating File (Existing File)')
@@ -103,4 +105,4 @@ def moveMod(mod):
         shutil.copytree(modFol,outPathName,dirs_exist_ok=True)
         shutil.rmtree(modFol)
     else:
-        print('\033[93m'+'WARNING: '+name+' was not downloaded!'+'\033[0m')
+        print(Colors.WARNING+'WARNING: '+name+' was not downloaded!'+Colors.END)

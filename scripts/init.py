@@ -77,7 +77,7 @@ def downloadMods():
             steam.downloadMod(workshopURL)
             break
         elif workshopURLType == "collection":
-            index = 0 if (len(indexAndURL)>2 or not indexAndURL[1].isdigit()) else int(indexAndURL[1])
+            index = int(indexAndURL[1]) if (len(indexAndURL)>1 and indexAndURL[1].isdigit()) else 0
             print('(PROCESS) Downloading collection starting at mod #{}...'.format(index))
             steam.downloadCollection2(workshopURL,index)
             break
