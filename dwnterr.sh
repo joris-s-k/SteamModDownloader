@@ -1,0 +1,1 @@
+./scripts/steamcmd/steamcmd.sh +force_install_dir ./download +login anonymous +workshop_download_item 105600 $1 +exit
