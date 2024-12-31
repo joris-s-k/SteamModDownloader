@@ -20,7 +20,7 @@ def checkVersion():
         print("Listed Version: " + listedVersion)
         print("--------------------------------------------------")
 
-    
+
 def checkConfig():
     # Make configuration file if missing
     if not os.path.exists('./conf.json'):
@@ -28,7 +28,7 @@ def checkConfig():
             f.write('{"downloadDir":"","anonymousMode":"","steamAccountName":"","steamPassword":"","gameID":""}')
 
     # Reconfigure download directory setting if invalid
-    if not os.path.exists(conf.fetchConfiguration('downloadDir')):  
+    if not os.path.exists(conf.fetchConfiguration('downloadDir')):
         print('Non-existent mod download directory, please enter a new one => ')
         prompt=None
         if sys.stdout.isatty():
@@ -36,11 +36,11 @@ def checkConfig():
         else:
             try:
                 Tk().withdraw()
-                prompt = askdirectory() 
+                prompt = askdirectory()
             except ImportError:
                 print('(ERROR) TKInter not installed, resulting to default(Type mod download directory manually).')
                 prompt=input()
-        
+
         conf.configureSetting('downloadDir', prompt)
 
     # Reconfigure gameID if empty
@@ -68,17 +68,18 @@ def checkConfig():
 
 def downloadMods():
     while True:
-        workshopURL = input("Mod/Collection Workshop URL,startItem: ")
-        workshopURLType = steam.checkType(workshopURL)
-        URLandIndex = workshopURL.split(",")
+        inputURL = input("Mod/Collection Workshop URL,startItem: ")
+        indexAndURL = inputURL.split(",")
+        workshopURL = indexAndURL[0]
+        workshopURLType = steam.checkType(inputURL)
         if workshopURLType == "mod":
             print('(PROCESS) Downloading mod...')
-            steam.downloadMod(URLandIndex[0])
+            steam.downloadMod(workshopURL)
             break
         elif workshopURLType == "collection":
-            if(len(URLandIndex)<2): URLandIndex.append("0")
-            print('(PROCESS) Downloading collection...')
-            steam.downloadCollection2(URLandIndex[0],int(URLandIndex[1]))
+            index = 0 if (len(indexAndURL)>2 or not indexAndURL[1].isdigit()) else int(indexAndURL[1])
+            print('(PROCESS) Downloading collection starting at mod #{}...'.format(index))
+            steam.downloadCollection2(workshopURL,index)
             break
         else:
             print('(ERROR) Invalid URL, awaiting new.')
