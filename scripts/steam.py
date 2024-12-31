@@ -67,6 +67,13 @@ def moveDownloadedMods(url):
     for item in itemList:
         moveMod(parseMod(item.find("a", href=True)['href']))
 
+def downloadModFile(urls):
+    modList = []
+    for item in urls:
+        if item.startswith('https'): modList.append(parseMod(item))
+    downloadModList(modList)
+
+
 
 
 

@@ -81,6 +81,11 @@ def downloadMods():
             print('(PROCESS) Downloading collection starting at mod #{}...'.format(index))
             steam.downloadCollection2(workshopURL,index)
             break
+        elif os.path.isfile(inputURL):
+            inputFile = open(inputURL, 'r')
+            workshopURLs = inputFile.read().split('\n')
+            inputFile.close()
+            steam.downloadModFile(workshopURLs)
         else:
             print('(ERROR) Invalid URL, awaiting new.')
     #print('--------------------------------------------------')

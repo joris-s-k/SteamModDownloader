@@ -89,7 +89,6 @@ def moveMod(mod):
     name = mod[2]
     insDir = mod[3]
     #print('\n--------------------------------------------------')
-    print('--------------------------------------------------')
     print('Moving and Renaming: ('+id+') '+name)
     modFol=conDir+gameId+'/'+id+'/'
     outPathName=insDir+'/'+name
@@ -106,3 +105,4 @@ def moveMod(mod):
         shutil.rmtree(modFol)
     else:
         print(Colors.WARNING+'WARNING: '+name+' was not downloaded!'+Colors.END)
+        print('--------------------------------------------------')
