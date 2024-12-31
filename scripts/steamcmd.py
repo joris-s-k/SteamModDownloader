@@ -79,25 +79,28 @@ def downloadModList(modList):
     command.append('+exit')
     subprocess.run(command)
     for mod in modList:
-        id = mod[0]
-        gameId = mod[1]
-        name = mod[2]
-        insDir = mod[3]
-        print('\n--------------------------------------------------')
-        print('Moving and Renaming ' +name+' ('+id+')')
-        modFol=conDir+gameId+'/'+id+'/'
-        outPathName=insDir+'/'+name
-        if os.path.exists(outPathName): print('Updating File (Existing File)')
-        if os.path.exists(modFol):
-            # Prepare info.json for mod
-            with open(os.path.join(modFol,'smbinfo.json'), 'w') as jsonFile:
-                infoData= {
-                    "name": name,
-                    "gameID": gameId
-                }
-                json.dump(infoData,jsonFile,indent=4)
-            shutil.copytree(modFol,outPathName,dirs_exist_ok=True)
-            shutil.rmtree(modFol)
-        else:
-            print('ERROR: '+name+' was not downloaded!')
+        moveMod(mod)
 
+def moveMod(mod):
+    id = mod[0]
+    gameId = mod[1]
+    name = mod[2]
+    insDir = mod[3]
+    #print('\n--------------------------------------------------')
+    print('--------------------------------------------------')
+    print('Moving and Renaming ' +name+' ('+id+')')
+    modFol=conDir+gameId+'/'+id+'/'
+    outPathName=insDir+'/'+name
+    if os.path.exists(outPathName): print('Updating File (Existing File)')
+    if os.path.exists(modFol):
+        # Prepare info.json for mod
+        with open(os.path.join(modFol,'smbinfo.json'), 'w') as jsonFile:
+            infoData= {
+                "name": name,
+                "gameID": gameId
+            }
+            json.dump(infoData,jsonFile,indent=4)
+        shutil.copytree(modFol,outPathName,dirs_exist_ok=True)
+        shutil.rmtree(modFol)
+    else:
+        print('\033[93m'+'WARNING: '+name+' was not downloaded!'+'\033[0m')

@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from scripts.steamcmd import download, downloadModList
+from scripts.steamcmd import download, downloadModList,moveMod
 from scripts.config import fetchConfiguration
 
 def processURL(url):
@@ -33,8 +33,8 @@ def downloadCollection(url,startIndex):
     res = requests.get(url)
     doc = BeautifulSoup(res.text,"html.parser")
     itemList = doc.find_all(class_="collectionItemDetails")
-    for index, item in enumerate(itemList):
-        if(index >= startIndex):
+    itemList = itemList[startIndex:]
+    for item in itemList:
             print(" ")
             print(" ")
             print("Downloading Item #{}".format(index))
@@ -54,9 +54,19 @@ def downloadCollection2(url,startIndex):
     res = requests.get(url)
     doc = BeautifulSoup(res.text,"html.parser")
     itemList = doc.find_all(class_="collectionItemDetails")
+    itemList = itemList[startIndex:]
     modList = []
-    for index, item in enumerate(itemList):
-        if(index >= startIndex):
-            modList.append(parseMod(item.find("a", href=True)['href']))
+    for item in itemList:
+        modList.append(parseMod(item.find("a", href=True)['href']))
     downloadModList(modList)
+
+def moveDownloadedMods(url):
+    res = requests.get(url)
+    doc = BeautifulSoup(res.text,"html.parser")
+    itemList = doc.find_all(class_="collectionItemDetails")
+    for item in itemList:
+        moveMod(parseMod(item.find("a", href=True)['href']))
+
+
+
 

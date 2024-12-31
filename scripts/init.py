@@ -139,13 +139,26 @@ def configure():
     conf.configureSetting(setting, value)
     start()
 
+def moveMods():
+    while True:
+        workshopURL = input("Mod/Collection Workshop URL: ")
+        workshopURLType = steam.checkType(workshopURL)
+        if workshopURLType == "mod":
+            print('(ERROR) Not a collection')
+        elif workshopURLType == "collection":
+            print('(PROCESS) Moving downloaded mods...')
+            steam.moveDownloadedMods(workshopURL)
+            break
+        else:
+            print('(ERROR) Invalid URL, awaiting new.')
+
 def start():
     checkVersion()
     checkConfig()
     checkAndDownloadSteamCmd()
     while True:
         print('Welcome to SWD!')
-        print('[1] => Download Mods\n[2] => List Mods\n[3] => Open Settings\n[4] => Exit')
+        print('[1] => Download Mods\n[2] => List Mods\n[3] => Open Settings\n[4] => Move Mods\n[5] => Exit')
         prompt = input('> ')
         if prompt == '1':
             downloadMods()
@@ -156,6 +169,9 @@ def start():
             configure()
             break
         elif prompt == '4':
+            moveMods()
+            break
+        elif prompt == '5':
             exit()
         else:
             print('(ERROR) Invalid option passed, exiting.')

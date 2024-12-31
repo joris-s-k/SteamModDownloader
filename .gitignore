@@ -1,5 +1,10 @@
 /env
 /scripts/steamcmd/
 /scripts/__pycache__
+/scripts/_ORG
 conf.json
 smddev
+/.clientEnv
+dwnterr.sh
+version.txt
+/download
